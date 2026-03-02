@@ -4,9 +4,8 @@
     <title>Calculadora de Juros Compostos</title>
 </head>
 <body>
-
     <h2>Calculadora de Juros Compostos</h2>
-    <label>OBS: Inserir informações como vírgula em seu devido local,<br> caso contrário o cálculo não será realizado corretamente.</label>
+    <label>OBS: Inserir informações SEM virgula ou pontos,<br> caso contrário o cálculo não será realizado corretamente.</label>
 
     <br><br><label>Valor Inicial:</label>
     <input type="number" id="principal" step="0.01"><br><br>
@@ -22,25 +21,38 @@
     <h3 id="result"></h3>
 
     <script>
-        function calculate() {
-            const principal = parseFloat(document.getElementById("principal").value);
-            const rate = parseFloat(document.getElementById("rate").value) / 100;
-            const time = parseFloat(document.getElementById("time").value);
+    function calculate() {
+        const principal = parseFloat(document.getElementById("principal").value);
+        const ratePercent = parseFloat(document.getElementById("rate").value);
+        const time = parseFloat(document.getElementById("time").value);
 
-            if (isNaN(principal) || isNaN(rate) || isNaN(time)) {
-                document.getElementById("result").innerText = "Por favor, preencha todos os campos corretamente.";
-                return;
-            }
-
-            const amount = principal * Math.pow((1 + rate), time);
-
-            document.getElementById("result").innerText =
-                "Valor Final: $" + amount.toFixed(2);
+        if (isNaN(principal) || isNaN(ratePercent) || isNaN(time)) {
+            document.getElementById("result").innerText = "Por favor, preencha todos os campos corretamente.";
+            return;
         }
+
+        const rate = ratePercent / 100;
+        const base = (1 + rate);
+        const amount = principal * Math.pow(base, time);
+
+        document.getElementById("result").innerHTML = `
+            Considerando:<br>
+            M = Valor Final (Montante)<br>
+            C = Valor Inicial (Principal)<br>
+            r = Taxa de Juros (Em decimal)<br>
+            n = Tempo decorrido (Prazo)<br><br>
+
+            Formula:<br>
+            M = C × (1 + r)^n<br><br>
+
+            Substituindo valores:<br>
+            M = ${principal} × (1 + ${rate})^${time}<br>
+            M = ${principal} × (${base.toFixed(4)})^${time}<br><br>
+
+            Resultado Final:<br>
+            M = R$${amount.toFixed(2)}
+        `;
+    }
     </script>
-
 </body>
-
 </html>
-
-
