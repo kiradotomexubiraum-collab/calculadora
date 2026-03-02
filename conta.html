@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculadora de Juros Compostos</title>
+</head>
+<body>
+
+    <h2>Calculadora de Juros Compostos</h2>
+
+    <label>Valor Inicial:</label>
+    <input type="number" id="principal" step="0.01"><br><br>
+
+    <label>Taxa de Juros (% por período):</label>
+    <input type="number" id="rate" step="0.01"><br><br>
+
+    <label>Tempo (periodo):</label>
+    <input type="number" id="time" step="1"><br><br>
+
+    <div class="butao"><button onclick="calculate()">Calcular</button></div>
+
+    <h3 id="result"></h3>
+
+    <script>
+        function calculate() {
+            const principal = parseFloat(document.getElementById("principal").value);
+            const rate = parseFloat(document.getElementById("rate").value) / 100;
+            const time = parseFloat(document.getElementById("time").value);
+
+            if (isNaN(principal) || isNaN(rate) || isNaN(time)) {
+                document.getElementById("result").innerText = "Por favor, preencha todos os campos corretamente.";
+                return;
+            }
+
+            const amount = principal * Math.pow((1 + rate), time);
+
+            document.getElementById("result").innerText =
+                "Valor Final: $" + amount.toFixed(2);
+        }
+    </script>
+
+</body>
+</html>
