@@ -16,19 +16,18 @@
 <label>
     <input type="radio" name="mode" value="normal" checked>
     Calcular Juros Compostos
-</label>
+</label><br><br>
 
 <label>
     <input type="radio" name="mode" value="reverse">
     Calcular Investimento Necessário (Juros Compostos)
-</label>
+</label><br><br>
 
 <label>
     <input type="radio" name="mode" value="simple">
     Calcular Juros Simples
 </label>
-
-<br><br>
+<br><br>    
 
 <label id="principalLabel">Valor Inicial:</label>
 <input type="number" id="principal" step="0.01"><br><br>
@@ -39,7 +38,7 @@
 <label>Tempo (período):</label>
 <input type="number" id="time" step="1"><br><br>
 
-<button onclick="calculate()">Calcular</button>
+<div class="btn"></div><button class= "butao" onclick="calculate()">Calcular</button>
 
 <h3 id="result"></h3>
 
