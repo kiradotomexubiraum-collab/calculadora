@@ -2,7 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="conta.css">
-    <title>Calculadora de Juros Compostos</title>
+    <title>Calculadora de Juros</title>
     <style>
         body {
             color: #ffff; /* All text will be white */
@@ -11,16 +11,21 @@
 </head>
 <body>
 
-<h2>Calculadora de Juros Compostos</h2>
+<h2>Calculadora de Juros</h2>
 
 <label>
     <input type="radio" name="mode" value="normal" checked>
-    Calcular Valor Final
+    Calcular Juros Compostos
 </label>
 
 <label>
     <input type="radio" name="mode" value="reverse">
-    Calcular Investimento Necessário
+    Calcular Investimento Necessário (Juros Compostos)
+</label>
+
+<label>
+    <input type="radio" name="mode" value="simple">
+    Calcular Juros Simples
 </label>
 
 <br><br>
@@ -54,6 +59,10 @@ radios.forEach(radio => {
             label.textContent = "Valor Final Desejado:";
         }
 
+        if (radio.value === "simple" && radio.checked) {
+            label.textContent = "Valor Inicial:";
+        }
+
         document.getElementById("result").innerHTML = "";
     });
 });
@@ -80,7 +89,7 @@ function calculate() {
 
         output = `
         Fórmula:<br>
-        M = P × (1 + i)^n<br><br>
+        M = C × (1 + i)^n<br><br>
 
         Substituindo:<br>
         M = ${principalInput} × (${base.toFixed(4)})^${time}<br><br>
@@ -88,18 +97,31 @@ function calculate() {
         Resultado:<br>
         M = ${amount.toFixed(2)}
         `;
-    } else {
+    } else if (mode === "reverse") {
         const required = principalInput / Math.pow(base, time);
 
         output = `
         Fórmula Inversa:<br>
-        P = M / (1 + i)^n<br><br>
+        C = M / (1 + i)^n<br><br>
 
         Substituindo:<br>
-        P = ${principalInput} / (${base.toFixed(4)})^${time}<br><br>
+        C = ${principalInput} / (${base.toFixed(4)})^${time}<br><br>
 
         Investimento Necessário:<br>
-        P = ${required.toFixed(2)}
+        C = ${required.toFixed(2)}
+        `;
+    } else {
+        const simpleAmount = principalInput * (1 + rate * time);
+
+        output = `
+        Fórmula:<br>
+        M = C x (1 + (i x n)<br><br>
+
+        Substituindo:<br>
+        M = ${principalInput} x (1 + (${ratePercent}% x ${time}))<br><br>
+
+        Investimento Necessário:<br>
+        C = ${simpleAmount.toFixed(2)}
         `;
     }
 
