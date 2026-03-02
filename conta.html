@@ -4,55 +4,102 @@
     <title>Calculadora de Juros Compostos</title>
 </head>
 <body>
-    <h2>Calculadora de Juros Compostos</h2>
-    <label>OBS: Inserir informações SEM virgula ou pontos,<br> caso contrário o cálculo não será realizado corretamente.</label>
 
-    <br><br><label>Valor Inicial:</label>
-    <input type="number" id="principal" step="0.01"><br><br>
+<h2>Calculadora de Juros Compostos</h2>
 
-    <label>Taxa de Juros (% por período):</label>
-    <input type="number" id="rate" step="0.01"><br><br>
+<label>
+    <input type="radio" name="mode" value="normal" checked>
+    Calcular Valor Final
+</label>
 
-    <label>Tempo (periodo):</label>
-    <input type="number" id="time" step="1"><br><br>
+<label>
+    <input type="radio" name="mode" value="reverse">
+    Calcular Investimento Necessário
+</label>
 
-    <div class="butao"><button onclick="calculate()">Calcular</button></div>
+<br><br>
 
-    <h3 id="result"></h3>
+<label id="principalLabel">Valor Inicial:</label>
+<input type="number" id="principal" step="0.01"><br><br>
 
-    <script>
-    function calculate() {
-        const principal = parseFloat(document.getElementById("principal").value);
-        const ratePercent = parseFloat(document.getElementById("rate").value);
-        const time = parseFloat(document.getElementById("time").value);
+<label>Taxa (% por período):</label>
+<input type="number" id="rate" step="0.01"><br><br>
 
-        if (isNaN(principal) || isNaN(ratePercent) || isNaN(time)) {
-            document.getElementById("result").innerText = "Por favor, preencha todos os campos corretamente.";
-            return;
+<label>Tempo (período):</label>
+<input type="number" id="time" step="1"><br><br>
+
+<button onclick="calculate()">Calcular</button>
+
+<h3 id="result"></h3>
+
+<script>
+// Toggle label text
+const radios = document.querySelectorAll(`input[name="mode"]`);
+
+radios.forEach(radio => {
+    radio.addEventListener("change", () => {
+        const label = document.getElementById("principalLabel");
+
+        if (radio.value === "normal" && radio.checked) {
+            label.textContent = "Valor Inicial:";
         }
 
-        const rate = ratePercent / 100;
-        const base = (1 + rate);
-        const amount = principal * Math.pow(base, time);
+        if (radio.value === "reverse" && radio.checked) {
+            label.textContent = "Valor Final Desejado:";
+        }
 
-        document.getElementById("result").innerHTML = `
-            Considerando:<br>
-            M = Valor Final (Montante)<br>
-            C = Valor Inicial (Principal)<br>
-            r = Taxa de Juros (Em decimal)<br>
-            n = Tempo decorrido (Prazo)<br><br>
+        document.getElementById("result").innerHTML = "";
+    });
+});
 
-            Formula:<br>
-            M = C × (1 + r)^n<br><br>
+function calculate() {
+    const mode = document.querySelector(`input[name="mode"]:checked`).value;
+    const principalInput = parseFloat(document.getElementById("principal").value);
+    const ratePercent = parseFloat(document.getElementById("rate").value);
+    const time = parseFloat(document.getElementById("time").value);
 
-            Substituindo valores:<br>
-            M = ${principal} × (1 + ${rate})^${time}<br>
-            M = ${principal} × (${base.toFixed(4)})^${time}<br><br>
+    if (isNaN(principalInput) || isNaN(ratePercent) || isNaN(time)) {
+        document.getElementById("result").innerText =
+            "Por favor, preencha todos os campos corretamente.";
+        return;
+    }
 
-            Resultado Final:<br>
-            M = R$${amount.toFixed(2)}
+    const rate = ratePercent / 100;
+    const base = 1 + rate;
+
+    let output = "";
+
+    if (mode === "normal") {
+        const amount = principalInput * Math.pow(base, time);
+
+        output = `
+        Fórmula:<br>
+        M = P × (1 + i)^n<br><br>
+
+        Substituindo:<br>
+        M = ${principalInput} × (${base.toFixed(4)})^${time}<br><br>
+
+        Resultado:<br>
+        M = ${amount.toFixed(2)}
+        `;
+    } else {
+        const required = principalInput / Math.pow(base, time);
+
+        output = `
+        Fórmula Inversa:<br>
+        P = M / (1 + i)^n<br><br>
+
+        Substituindo:<br>
+        P = ${principalInput} / (${base.toFixed(4)})^${time}<br><br>
+
+        Investimento Necessário:<br>
+        P = ${required.toFixed(2)}
         `;
     }
-    </script>
+
+    document.getElementById("result").innerHTML = output;
+}
+</script>
+
 </body>
 </html>
