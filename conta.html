@@ -20,14 +20,22 @@
 
 <label>
     <input type="radio" name="mode" value="reverse">
-    Calcular Investimento Necessário (Juros Compostos)
+    Calcular Juros Compostos Inverso
 </label><br><br>
 
 <label>
     <input type="radio" name="mode" value="simple">
     Calcular Juros Simples
+</label><br><br>
+
+<label>
+    <input type="radio" name="mode" value="simple-reverse">
+    Calcular Juros Simples Inverso
 </label>
-<br><br>    
+
+<br><br>
+
+<label id="principalLabel1"></label><br><br>
 
 <label id="principalLabel">Valor Inicial:</label>
 <input type="number" id="principal" step="0.01"><br><br>
@@ -49,17 +57,25 @@ const radios = document.querySelectorAll(`input[name="mode"]`);
 radios.forEach(radio => {
     radio.addEventListener("change", () => {
         const label = document.getElementById("principalLabel");
+        const label1 = document.getElementById("principalLabel1");
 
         if (radio.value === "normal" && radio.checked) {
             label.textContent = "Valor Inicial:";
+            label1.textContent = "Calcular o valor final após os juros compostos."
         }
 
         if (radio.value === "reverse" && radio.checked) {
             label.textContent = "Valor Final Desejado:";
+            label1.textContent = "Calcular o valor inicial necessário para atingir o valor final desejado com juros compostos."
         }
 
         if (radio.value === "simple" && radio.checked) {
             label.textContent = "Valor Inicial:";
+            label1.textContent = "Calcular o valor final após os juros simples."
+        }
+        if(radio.value === "simple-reverse" && radio.checked){
+            label.textContent = "Valor Final Desejado:";
+            label1.textContent = "Calcular o valor inicial necessário para atingir o valor final desejado com juros simples."
         }
 
         document.getElementById("result").innerHTML = "";
@@ -109,7 +125,7 @@ function calculate() {
         Investimento Necessário:<br>
         C = ${required.toFixed(2)}
         `;
-    } else {
+    } else if (mode === "simple") {
         const simpleAmount = principalInput * (1 + rate * time);
 
         output = `
@@ -119,9 +135,24 @@ function calculate() {
         Substituindo:<br>
         M = ${principalInput} x (1 + (${ratePercent}% x ${time}))<br><br>
 
-        Investimento Necessário:<br>
+        Investimento Inicial:<br>
         C = ${simpleAmount.toFixed(2)}
         `;
+    } else if (mode === "simple-reverse") {
+        const requiredSimple = principalInput / (1 + rate * time);
+
+        output = `
+        Fórmula Inversa:<br>
+        C = M / (1 + (i x n)<br><br>
+
+        Substituindo:<br>
+        C = ${principalInput} / (1 + (${ratePercent}% x ${time}))<br><br>
+
+        Investimento Necessário:<br>
+        C = ${requiredSimple.toFixed(2)}
+        `;
+    } else {
+        output = "Modo desconhecido.";
     }
 
     document.getElementById("result").innerHTML = output;
